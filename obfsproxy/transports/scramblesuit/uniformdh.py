@@ -5,18 +5,25 @@ The class `UniformDH' is used by the server as well as by the client to handle
 the Uniform Diffie-Hellman handshake used by ScrambleSuit.
 """
 
-import const
+from __future__ import absolute_import
+
 import random
 import binascii
 
 import Crypto.Hash.SHA256
 
-import util
-import mycrypto
+from . import const
+from . import util
+from . import mycrypto
 
-import obfsproxy.transports.obfs3_dh as obfs3_dh
 import obfsproxy.transports.base as base
 import obfsproxy.common.log as logging
+
+try:
+    # py-uniformdh's module name shadows the script name
+    import uniformdh as obfs3_dh
+except ImportError:
+    import obfsproxy.transports.obfs3_dh as obfs3_dh
 
 log = logging.get_obfslogger()
 

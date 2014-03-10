@@ -9,12 +9,16 @@ import random
 
 import obfsproxy.common.aes as aes
 import obfsproxy.transports.base as base
-import obfsproxy.transports.obfs3_dh as obfs3_dh
 import obfsproxy.common.log as logging
 import obfsproxy.common.hmac_sha256 as hmac_sha256
 import obfsproxy.common.rand as rand
 
 from twisted.internet import threads
+
+try:
+    import uniformdh as obfs3_dh
+except ImportError:
+    import obfsproxy.transports.obfs3_dh as obfs3_dh
 
 log = logging.get_obfslogger()
 
