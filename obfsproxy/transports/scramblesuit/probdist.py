@@ -5,11 +5,10 @@ The class RandProbDist provides an interface to randomly generate probability
 distributions.  Random samples can then be drawn from these distributions.
 """
 
-import random
-
 import const
 
 import obfsproxy.common.log as logging
+import obfsproxy.common.ctr_drbg as ctr_drbg
 
 log = logging.get_obfslogger()
 
@@ -30,7 +29,7 @@ class RandProbDist:
         generated deterministically.
         """
 
-        self.prng = random if (seed is None) else random.Random(seed)
+        self.prng = ctr_drbg.ctr_drbg if (seed is None) else ctr_drbg.CtrDrbg(seed)
 
         self.sampleList = []
         self.dist = self.genDistribution(genSingleton)
@@ -61,6 +60,7 @@ class RandProbDist:
             self.sampleList.append((cumulProb, singleton,))
 
         dist[genSingleton()] = (1 - cumulProb)
+        self.prng.seed()
 
         return dist
 
@@ -86,7 +86,7 @@ class RandProbDist:
 
         assert len(self.sampleList) > 0
 
-        rand = random.random()
+        rand = self.prng.random()
 
         for cumulProb, singleton in self.sampleList:
             if rand <= cumulProb:
