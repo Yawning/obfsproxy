@@ -60,7 +60,7 @@ class RandProbDist:
             self.sampleList.append((cumulProb, singleton,))
 
         dist[genSingleton()] = (1 - cumulProb)
-        self.prng.seed()
+        self.prng = None
 
         return dist
 
@@ -86,7 +86,7 @@ class RandProbDist:
 
         assert len(self.sampleList) > 0
 
-        rand = self.prng.random()
+        rand = ctr_drbg.ctr_drbg.random()
 
         for cumulProb, singleton in self.sampleList:
             if rand <= cumulProb:
